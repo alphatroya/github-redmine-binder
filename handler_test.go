@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
-	gh "github.com/google/go-github/v32/github"
 	"testing"
+
+	gh "github.com/google/go-github/v32/github"
 )
 
 func TestHighlightIssues(t *testing.T) {
 	host := "https://google.com"
-	fullHost :=  host + "/issues/"
-	cases := []struct{
-		input string
+	fullHost := host + "/issues/"
+	cases := []struct {
+		input  string
 		output string
-	} {
+	}{
 		{
 			"Test \n- #54444\n- #55555",
 			fmt.Sprintf("Test \n- [#54444](%s54444)\n- [#55555](%s55555)", fullHost, fullHost),
