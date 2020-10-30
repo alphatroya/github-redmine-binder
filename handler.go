@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"regexp"
 
@@ -12,6 +13,7 @@ import (
 
 type Handler struct {
 	githubAccessToken string
+	redmineHost       string
 }
 
 func (h Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -48,7 +50,7 @@ func (h Handler) handlePR(pr githook.PullRequestPayload) error {
 	if err != nil {
 		return err
 	}
-	editedPR := h.highlightLinks(sourcePR)
+	editedPR := h.highlightLinks(sourcePR, h.redmineHost)
 	_, _, err = client.PullRequests.Edit(ctx, owner, repo, number, editedPR)
 	if err != nil {
 		return err
@@ -56,10 +58,10 @@ func (h Handler) handlePR(pr githook.PullRequestPayload) error {
 	return nil
 }
 
-func (h Handler) highlightLinks(pr *gh.PullRequest) *gh.PullRequest {
+func (h Handler) highlightLinks(pr *gh.PullRequest, host string) *gh.PullRequest {
 	body := pr.Body
 	re := regexp.MustCompile(`- #?([0-9]{4,})`)
-	replaced := re.ReplaceAllString(*body, "- [#$1](https://pm.handh.ru/issues/$1)")
+	replaced := re.ReplaceAllString(*body, fmt.Sprintf("- [#$1](%s/issues/$1)", host))
 	resultPR := gh.PullRequest{Body: &replaced}
 	return &resultPR
 }
