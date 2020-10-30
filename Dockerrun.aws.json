@@ -1,0 +1,13 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "alphatroya/github-redmine-binder",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 8933,
+      "HostPort": 8080
+    }
+  ]
+}
