@@ -11,12 +11,12 @@ import (
 	githook "gopkg.in/go-playground/webhooks.v5/github"
 )
 
-type Handler struct {
+type HighlightHandler struct {
 	githubAccessToken string
 	redmineHost       string
 }
 
-func (h Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (h HighlightHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	hook, _ := githook.New()
 	payload, err := hook.Parse(request, githook.PullRequestEvent)
 	if err != nil {
@@ -35,30 +35,31 @@ func (h Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func (h Handler) handlePR(pr githook.PullRequestPayload) error {
+func (h HighlightHandler) handlePR(pr githook.PullRequestPayload) error {
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: h.githubAccessToken},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := gh.NewClient(tc)
-	// TODO: parse input or move to ENV
-	owner := "Heads-and-Hands"
-	repo := "citilink-ios"
+	prData, err := extractCredentials(pr.PullRequest.HTMLURL)
+	if err != nil {
+		return err
+	}
 	number := int(pr.PullRequest.Number)
-	sourcePR, _, err := client.PullRequests.Get(ctx, owner, repo, number)
+	sourcePR, _, err := client.PullRequests.Get(ctx, prData.owner, prData.repo, number)
 	if err != nil {
 		return err
 	}
 	editedPR := h.highlightLinks(sourcePR, h.redmineHost)
-	_, _, err = client.PullRequests.Edit(ctx, owner, repo, number, editedPR)
+	_, _, err = client.PullRequests.Edit(ctx, prData.owner, prData.repo, number, editedPR)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (h Handler) highlightLinks(pr *gh.PullRequest, host string) *gh.PullRequest {
+func (h HighlightHandler) highlightLinks(pr *gh.PullRequest, host string) *gh.PullRequest {
 	body := pr.Body
 	re := regexp.MustCompile(`- #?([0-9]{4,})`)
 	replaced := re.ReplaceAllString(*body, fmt.Sprintf("- [#$1](%s/issues/$1)", host))

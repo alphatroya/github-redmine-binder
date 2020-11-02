@@ -22,7 +22,7 @@ func main() {
 		log.Fatalf("ENV %s is not set", host)
 		return
 	}
-	http.Handle("/github", &Handler{githubAccessToken: accessToken, redmineHost: host})
+	http.Handle("/github", &HighlightHandler{githubAccessToken: accessToken, redmineHost: host})
 	port := "8933"
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

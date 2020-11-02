@@ -37,7 +37,7 @@ func TestHighlightIssues(t *testing.T) {
 	}
 
 	for _, testCase := range cases {
-		handler := Handler{}
+		handler := HighlightHandler{}
 		pr := gh.PullRequest{Body: &testCase.input}
 		result := handler.highlightLinks(&pr, host)
 		if *result.Body != testCase.output {
