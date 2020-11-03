@@ -27,12 +27,36 @@ func TestHighlightIssues(t *testing.T) {
 			fmt.Sprintf("Test \n- [#54444](%s54444)", fullHost),
 		},
 		{
+			fmt.Sprintf("Test [#54444](%s54444), [#54445](%s54445)", fullHost, fullHost),
+			fmt.Sprintf("Test [#54444](%s54444), [#54445](%s54445)", fullHost, fullHost),
+		},
+		{
+			fmt.Sprintf("Test \n- [#54444](%s54444)\n- [#54445](%s54445)", fullHost, fullHost),
+			fmt.Sprintf("Test \n- [#54444](%s54444)\n- [#54445](%s54445)", fullHost, fullHost),
+		},
+		{
 			fmt.Sprintf("Test \n- [#54444](%s54444)", fullHost),
 			fmt.Sprintf("Test \n- [#54444](%s54444)", fullHost),
 		},
 		{
 			"Test \n- #54\n- #55",
 			"Test \n- #54\n- #55",
+		},
+		{
+			"Test 54453",
+			fmt.Sprintf("Test [#54453](%s54453)", fullHost),
+		},
+		{
+			"#54453",
+			fmt.Sprintf("[#54453](%s54453)", fullHost),
+		},
+		{
+			"Test #54453",
+			fmt.Sprintf("Test [#54453](%s54453)", fullHost),
+		},
+		{
+			"Test #54453 #55743",
+			fmt.Sprintf("Test [#54453](%s54453) [#55743](%s55743)", fullHost, fullHost),
 		},
 	}
 
