@@ -20,6 +20,8 @@ func (h HighlightHandler) ServeHTTP(writer http.ResponseWriter, request *http.Re
 	hook, _ := githook.New()
 	payload, err := hook.Parse(request, githook.PullRequestEvent)
 	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		_, _ = writer.Write([]byte(err.Error()))
 		return
 	}
 
@@ -30,6 +32,7 @@ func (h HighlightHandler) ServeHTTP(writer http.ResponseWriter, request *http.Re
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
+			return
 		}
 		writer.WriteHeader(http.StatusOK)
 	}
