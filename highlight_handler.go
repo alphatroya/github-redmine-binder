@@ -64,10 +64,15 @@ func (h HighlightHandler) handlePR(pr githook.PullRequestPayload) error {
 
 func (h HighlightHandler) highlightLinks(pr *gh.PullRequest, host string) *gh.PullRequest {
 	body := pr.Body
-	backRegexp := regexp.MustCompile(fmt.Sprintf(`\[#([0-9]{4,})]\(%s/issues/[0-9]{4,}\)`, host))
-	backReplaced := backRegexp.ReplaceAllString(*body, "$1")
+
+	rRg := regexp.MustCompile(fmt.Sprintf(`\[#([0-9]{4,})]\(%s/issues/[0-9]{4,}\)`, host))
+	rStr := rRg.ReplaceAllString(*body, "$1")
+
+	rRg = regexp.MustCompile(fmt.Sprintf(`%s/issues/([0-9]{4,})`, host))
+	rStr = rRg.ReplaceAllString(rStr, "$1")
+
 	re := regexp.MustCompile(`#?([0-9]{4,})`)
-	replaced := re.ReplaceAllString(backReplaced, fmt.Sprintf("[#$1](%s/issues/$1)", host))
+	replaced := re.ReplaceAllString(rStr, fmt.Sprintf("[#$1](%s/issues/$1)", host))
 	resultPR := gh.PullRequest{Body: &replaced}
 	return &resultPR
 }

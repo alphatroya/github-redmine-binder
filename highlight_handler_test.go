@@ -58,6 +58,10 @@ func TestHighlightIssues(t *testing.T) {
 			"Test #54453 #55743",
 			fmt.Sprintf("Test [#54453](%s54453) [#55743](%s55743)", fullHost, fullHost),
 		},
+		{
+			fmt.Sprintf("%s54453", fullHost),
+			fmt.Sprintf("[#54453](%s54453)", fullHost),
+		},
 	}
 
 	for _, testCase := range cases {

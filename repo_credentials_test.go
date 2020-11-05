@@ -3,20 +3,20 @@ package main
 import "testing"
 
 func TestExtractCredentialsCorrect(t *testing.T) {
-	tcs := []struct{
-		url string
+	tcs := []struct {
+		url   string
 		owner string
-		repo string
+		repo  string
 	}{
 		{
-			url: "https://github.com/alphatroya/github-redmine-binder/pull/120",
+			url:   "https://github.com/alphatroya/github-redmine-binder/pull/120",
 			owner: "alphatroya",
-			repo: "github-redmine-binder",
+			repo:  "github-redmine-binder",
 		},
 		{
-			url: "https://github.com/owef/repo/pull/120",
+			url:   "https://github.com/owef/repo/pull/120",
 			owner: "owef",
-			repo: "repo",
+			repo:  "repo",
 		},
 	}
 	for _, tc := range tcs {
@@ -34,7 +34,7 @@ func TestExtractCredentialsCorrect(t *testing.T) {
 }
 
 func TestExtractCredentialsNonCorrect(t *testing.T) {
-	tcs := []struct{
+	tcs := []struct {
 		url string
 	}{
 		{
