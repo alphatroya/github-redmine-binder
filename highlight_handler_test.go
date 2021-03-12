@@ -62,6 +62,10 @@ func TestHighlightIssues(t *testing.T) {
 			fmt.Sprintf("%s54453", fullHost),
 			fmt.Sprintf("[#54453](%s54453)", fullHost),
 		},
+		{
+			"google.com/issues/81972",
+			fmt.Sprintf("[#81972](%s81972)", fullHost),
+		},
 	}
 
 	for _, testCase := range cases {
