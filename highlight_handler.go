@@ -68,7 +68,7 @@ func (h HighlightHandler) highlightLinks(pr *gh.PullRequest, host string) *gh.Pu
 	rRg := regexp.MustCompile(fmt.Sprintf(`\[#([0-9]{4,})]\(%s/issues/[0-9]{4,}\)`, host))
 	rStr := rRg.ReplaceAllString(*body, "$1")
 
-	rRg = regexp.MustCompile(fmt.Sprintf(`%s/issues/([0-9]{4,})`, host))
+	rRg = regexp.MustCompile(`.+/issues/([0-9]{4,})`)
 	rStr = rRg.ReplaceAllString(rStr, "$1")
 
 	re := regexp.MustCompile(`#?([0-9]{4,})`)
